@@ -24,13 +24,20 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response) {
-            const { status, data } = error.response;
+            const { status } = error.response;
 
-            if (status === 401) throw new UnauthorizedError();
+            if (status === 401) {
+                window.location.href = '/auth/login';
+                throw new UnauthorizedError();
+            }
 
-            throw new AppError(data.message || "Erro interno no servidor", status);
+            if (status >= 500) {
+                throw new AppError("The server encountered a problem. Please try again later.", status);
+            }
+
+            return Promise.reject(error);
         }
 
-        throw new AppError("Não foi possível conectar ao servidor", 503);
+        return Promise.reject(error);
     }
 );
