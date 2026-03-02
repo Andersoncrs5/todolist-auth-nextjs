@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import {Toaster} from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,17 +19,32 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
-  );
+                                       children,
+                                   }: {
+    children: React.ReactNode;
+}) {
+    return (
+        <html lang="en">
+            <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+
+            <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="fixed inset-0 w-full h-full object-cover -z-10 pointer-events-none"
+            >
+                <source src="/3163534-uhd_3840_2160_30fps.mp4" type="video/mp4" />
+            </video>
+
+            <div className="fixed inset-0 bg-black/60 -z-10 pointer-events-none" />
+
+            <main className="relative min-h-screen">
+                {children}
+            </main>
+
+            <Toaster position="top-right" richColors closeButton />
+            </body>
+        </html>
+    );
 }
