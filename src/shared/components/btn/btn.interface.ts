@@ -5,4 +5,5 @@ export interface ButtonBaseProps {
     children: React.ReactNode
     text?: string
     icon?: React.ReactNode
+    type?: "submit" | "reset" | "button" | undefined
 }
