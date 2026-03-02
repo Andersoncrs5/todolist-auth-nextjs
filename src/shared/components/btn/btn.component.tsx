@@ -4,7 +4,7 @@ import {ButtonBaseProps} from "@/shared/components/btn/btn.interface";
 export const ButtonBase = ({ icon, text ,children, className, ...props }: ButtonBaseProps):  React.JSX.Element => {
     return (
         <button
-            className={`p-2 rounded ${className}`}
+            className={`p-1 rounded ${className}`}
             {...props}
         >
             {children}
