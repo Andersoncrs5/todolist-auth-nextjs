@@ -1,3 +1,5 @@
 export interface InvalidInput {
-    errors: Record<string, string[]>;
+    body: {
+        errors: Record<string, string[]>;
+    };
 }
