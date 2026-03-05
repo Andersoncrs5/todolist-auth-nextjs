@@ -27,12 +27,7 @@ api.interceptors.response.use(
             const { status } = error.response;
 
             if (status === 401) {
-                window.location.href = '/auth/login';
                 throw new UnauthorizedError();
-            }
-
-            if (status >= 500) {
-                throw new AppError("The server encountered a problem. Please try again later.", status);
             }
 
             return Promise.reject(error);
