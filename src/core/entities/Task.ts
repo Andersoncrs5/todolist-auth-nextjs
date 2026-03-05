@@ -3,6 +3,7 @@ export interface Task {
     title: string;
     description?: string;
     done: boolean;
+    priority: number;
     userId: string;
     createdAt: Date | string;
     updatedAt?: Date | string;
