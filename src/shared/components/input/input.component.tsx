@@ -1,24 +1,30 @@
-import React from "react";
-import { CustomInputProps } from "./input.interface";
+import React, { forwardRef } from "react";
 
-const CustomInput: React.FC<CustomInputProps> = (props) => {
-    const { label, id, name, className, ...rest } = props;
-    const inputId = id || name || label;
+interface CustomInputProps
+    extends React.InputHTMLAttributes<HTMLInputElement> {
+    label?: string;
+}
 
-    return (
-        <div className="flex flex-col gap-2">
-            {label && (
-                <label htmlFor={inputId} className="text-sm font-medium text-white">
-                    {label}
-                </label>
-            )}
-            <input
-                id={inputId}
-                className={className}
-                {...rest}
-            />
-        </div>
-    );
-};
+const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
+    ({ label, className, ...rest }, ref) => {
+        return (
+            <div className="flex flex-col gap-2">
+                {label && (
+                    <label className="text-sm font-medium text-white">
+                        {label}
+                    </label>
+                )}
+
+                <input
+                    ref={ref}
+                    className={className}
+                    {...rest}
+                />
+            </div>
+        );
+    }
+);
+
+CustomInput.displayName = "CustomInput";
 
 export default CustomInput;
