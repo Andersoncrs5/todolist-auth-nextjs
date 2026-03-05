@@ -6,13 +6,14 @@ import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { AuthService } from "@/core/service/auth/auth.service";
 import { CreateUserDto } from "@/core/dto/user/create-user.dto";
-
-interface ValidationErrorResponse {
-    errors: Record<string, string[]>;
-}
+import {TokenResponse} from "@/core/res/token-response.res";
+import { useRouter } from "next/navigation";
+import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
+import {ResponseHTTP} from "@/core/res/response-http.res";
 
 export default function useRegister() {
-    const authService = useMemo(() => new AuthService(), []);
+    const authService: AuthService = useMemo(() => new AuthService(), []);
+    const router: AppRouterInstance = useRouter();
 
     const {
         register,
@@ -29,18 +30,23 @@ export default function useRegister() {
         clearErrors();
 
         try {
-            console.log(data)
             const result = await authService.register(data);
 
             if (result.status === 201) {
+
+                const tokens = result.data.body as TokenResponse
+
+                authService.setTokens(tokens)
                 toast.success("Welcome");
+
+                router.push('/main')
             }
 
         } catch (e: unknown) {
             const error = e as AxiosError<any>;
             const status = error.response?.status;
 
-            console.log(error.response?.data);
+            console.error(error.response?.data);
 
             if (status === 400) {
                 const responseData = error.response?.data;
@@ -65,6 +71,11 @@ export default function useRegister() {
                 }
             }
 
+            if (status === 409) {
+                const responseData = error.response?.data as ResponseHTTP<void>
+                toast.warning(responseData.message)
+            }
+            
             if (status && status >= 500) {
                 toast.error("Internal server error. Try again later.");
             }
