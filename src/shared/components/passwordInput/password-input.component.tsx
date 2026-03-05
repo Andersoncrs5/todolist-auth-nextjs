@@ -1,48 +1,44 @@
-'use client'
-
-import React, { useState } from "react";
-import { PasswordInputProps } from "@/shared/components/passwordInput/password-input.interface";
-import BtnFunc from "@/shared/components/btnFunc/btnFunc.component";
+import React, { forwardRef, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
-const PasswordInput: React.FC<PasswordInputProps> = ({
-     label,
-     id,
-     name,
-     className,
-     ...rest
- }) => {
-    const inputId = id || name || label;
-    const [show, setShow] = useState(false);
+interface PasswordInputProps
+    extends React.InputHTMLAttributes<HTMLInputElement> {
+    label?: string;
+}
 
-    return (
-        <div className="flex flex-col gap-2 relative">
-            {label && (
-                <label
-                    htmlFor={inputId}
-                    className="text-sm font-medium text-white"
-                >
-                    {label}
-                </label>
-            )}
+const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
+    ({ label, className, ...rest }, ref) => {
+        const [show, setShow] = useState(false);
 
-            <div className="relative">
-                <input
-                    type={show ? "text" : "password"}
-                    id={inputId}
-                    className={`w-full pr-10 ${className}`}
-                    {...rest}
-                />
+        return (
+            <div className="flex flex-col gap-2 relative">
+                {label && (
+                    <label className="text-sm font-medium text-white">
+                        {label}
+                    </label>
+                )}
 
-                <BtnFunc
-                    onClick={() => setShow(prev => !prev)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1"
-                >
-                    {show ? <Eye size={18} /> : <EyeOff size={18} />}
-                </BtnFunc>
+                <div className="relative">
+                    <input
+                        ref={ref}
+                        type={show ? "text" : "password"}
+                        className={`w-full pr-10 ${className}`}
+                        {...rest}
+                    />
+
+                    <button
+                        type="button"
+                        onClick={() => setShow(prev => !prev)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2"
+                    >
+                        {show ? <Eye size={18} /> : <EyeOff size={18} />}
+                    </button>
+                </div>
             </div>
-        </div>
-    );
-};
+        );
+    }
+);
+
+PasswordInput.displayName = "PasswordInput";
 
 export default PasswordInput;
