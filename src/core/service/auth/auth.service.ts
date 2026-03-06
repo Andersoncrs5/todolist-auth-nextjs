@@ -3,6 +3,7 @@ import {api} from "@/core/api/api-client";
 import {ResponseHTTP} from "@/core/res/response-http.res";
 import {TokenResponse} from "@/core/res/token-response.res";
 import {LoginUserDto} from "@/core/dto/user/login-user.dto";
+import {User} from "@/core/entities/User";
 
 export class AuthService {
     private readonly path: string = 'v1/Auth'
@@ -16,9 +17,19 @@ export class AuthService {
     }
 
     isLogged(): boolean {
-        const token: string | null = localStorage.getItem('token');
+        if (typeof window === 'undefined') return false;
 
+        const token = localStorage.getItem('token');
         return !!token;
+    }
+
+    getUserLogged(): User | null {
+        if (typeof window === 'undefined') return null;
+
+        const userJson = localStorage.getItem('user');
+        if (!userJson) return null;
+
+        return JSON.parse(userJson) as User;
     }
 
     setTokens(token: TokenResponse) {
@@ -31,6 +42,7 @@ export class AuthService {
             if (token.expirationToken) {
                 localStorage.setItem('tokenExp', token.expirationToken.toString());
             }
+            localStorage.setItem("user", JSON.stringify(token.user));
         } catch (e) {
             console.error(e);
         }
@@ -41,6 +53,7 @@ export class AuthService {
         localStorage.removeItem('tokenExp');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('refreshTokenExp');
+        localStorage.removeItem('user');
     }
 
 }
