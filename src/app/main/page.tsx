@@ -1,14 +1,80 @@
-
 'use client'
+
 import useMain from "@/app/main/main.hook";
+import {ArrowUpToLine, CircleUserRound, Loader2, LogOut, Pencil, Trash} from "lucide-react";
+import Navbar from "@/shared/components/navbar/navbar.component";
+import {BtnRedirect} from "@/shared/components/btnRedirect/btn-redirect";
+import Logo from "@/shared/components/logo/logo.comonent";
+import BtnFunc from "@/shared/components/btnFunc/btnFunc.component";
+import {useMemo} from "react";
+import {AuthService} from "@/core/service/auth/auth.service";
+import {useRouter} from "next/navigation";
+import {toast} from "react-toastify";
+import Footer from "@/shared/components/footer/footer.component";
+import MainLayout from "@/shared/components/main/main.component";
+import ShowTask from "@/shared/components/showTask/show-task.component";
+import {BtnDelete} from "@/shared/components/btnDelete/btn-delete.component";
 
 export default function Main() {
-    const {
-        isLoading
-    } = useMain()
+    const router = useRouter();
+    const { isLoading, tasks, deleteById } = useMain();
+    const authService = useMemo(() => new AuthService(), []);
+
+    if (isLoading) {
+        return (
+            <div className="grid place-items-center min-h-screen">
+                <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="h-14 w-14 text-blue-500 animate-spin" />
+                </div>
+            </div>
+        );
+    }
+
+    function logout() {
+        authService.logout();
+        toast.success("Bye Bye")
+        router.push("/")
+    }
+
     return (
         <div>
-            <h1>MAIN INSIDE</h1>
+            <Navbar>
+                <Logo />
+                <div className={"flex gap-3"} >
+                    <BtnRedirect
+                        to={"/user/profile"}
+                        icon={<CircleUserRound />}
+                    />
+                    <BtnRedirect
+                        to={"/task/create"}
+                        icon={<Pencil />}
+                    />
+                    <BtnFunc
+                            onClick={() => { logout() }}
+                            icon={<LogOut />}
+                    />
+                </div>
+            </Navbar>
+            <MainLayout>
+                {tasks?.items.map((item) => (
+                    <ShowTask
+                        key={item.id}
+                        task={item}
+                        buttons={
+                        <>
+                            <BtnDelete
+                                onClick={() => {deleteById(item.id)} }
+                            />
+                            <BtnFunc
+                                onClick={() => {} }
+                                icon={<ArrowUpToLine />}
+                            />
+                        </>
+                        }
+                    ></ShowTask>
+                ))}
+            </MainLayout>
+            <Footer logo={<Logo />} />
         </div>
-    )
+    );
 }
