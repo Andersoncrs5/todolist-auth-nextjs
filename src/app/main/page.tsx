@@ -1,7 +1,7 @@
 'use client'
 
 import useMain from "@/app/main/main.hook";
-import {ArrowUpToLine, CircleUserRound, Loader2, LogOut, Pencil, Trash} from "lucide-react";
+import {ArrowUpToLine, CircleUserRound, Loader2, LogOut, Pencil} from "lucide-react";
 import Navbar from "@/shared/components/navbar/navbar.component";
 import {BtnRedirect} from "@/shared/components/btnRedirect/btn-redirect";
 import Logo from "@/shared/components/logo/logo.comonent";
@@ -56,14 +56,15 @@ export default function Main() {
                 </div>
             </Navbar>
             <MainLayout>
-                {tasks?.items.map((item) => (
+
+                {tasks && tasks.items && tasks?.items.map((item) => (
                     <ShowTask
                         key={item.id}
                         task={item}
                         buttons={
                         <>
                             <BtnDelete
-                                onClick={() => {deleteById(item.id)} }
+                                onClick={() => { deleteById(item.id).then(r => r) } }
                             />
                             <BtnFunc
                                 onClick={() => {} }
@@ -73,6 +74,13 @@ export default function Main() {
                         }
                     ></ShowTask>
                 ))}
+
+                {(tasks && tasks.items.length === 0 ) && (
+                    <div className={"p-4 my-3 flex justify-center "} >
+                        <h1 className={"text-3xl font-light"} >No Tasks</h1>
+                    </div>
+                )}
+
             </MainLayout>
             <Footer logo={<Logo />} />
         </div>
