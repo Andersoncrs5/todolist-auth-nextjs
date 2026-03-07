@@ -33,12 +33,12 @@ export default function Home() {
                     <BtnRedirect
                         to="auth/register"
                         text="Register"
-                        className="bg-blue-900 border px-6 py-2 rounded-lg hover:bg-transparent transition duration-300"
+                        className="bg-transparent border px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
                     />
                     <BtnRedirect
                         to="auth/login"
                         text="Login"
-                        className="bg-blue-900 border px-6 py-2 rounded-lg hover:bg-transparent transition duration-300"
+                        className="bg-transparent border px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
                     />
                 </div>
             </div>
