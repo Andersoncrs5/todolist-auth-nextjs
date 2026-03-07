@@ -10,4 +10,8 @@ export class TaskService {
         });
     }
 
+    async delete(id: number) {
+        return await api.delete(this.path+"/"+id)
+    }
+
 }
