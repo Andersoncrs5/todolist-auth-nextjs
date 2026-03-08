@@ -2,7 +2,7 @@ import {CustomSpanErrorProps} from "@/shared/components/customSpanError/custom-s
 
 export default function CustomSpanError({ message, className="" }: CustomSpanErrorProps) {
     return (
-        <span className={"text-red-500 text-sm " + className}>
+        <span className={"text-red-600 text-sm " + className}>
             {message}
         </span>
     )
