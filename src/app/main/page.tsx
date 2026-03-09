@@ -1,40 +1,33 @@
 'use client'
 
 import useMain from "@/app/main/main.hook";
-import {ArrowUpToLine, CircleUserRound, Loader2, LogOut, Pencil} from "lucide-react";
+import {CircleUserRound, LogOut, Pencil} from "lucide-react";
 import Navbar from "@/shared/components/navbar/navbar.component";
 import {BtnRedirect} from "@/shared/components/btnRedirect/btn-redirect";
 import Logo from "@/shared/components/logo/logo.comonent";
 import BtnFunc from "@/shared/components/btnFunc/btnFunc.component";
-import {useMemo} from "react";
-import {AuthService} from "@/core/service/auth/auth.service";
-import {useRouter} from "next/navigation";
-import {toast} from "react-toastify";
 import Footer from "@/shared/components/footer/footer.component";
 import MainLayout from "@/shared/components/main/main.component";
 import ShowTask from "@/shared/components/showTask/show-task.component";
 import {BtnDelete} from "@/shared/components/btnDelete/btn-delete.component";
 import {BtnUpdate} from "@/shared/components/btnUpdate/btn-update.component";
+import NotFoundComponent from "@/shared/components/notFound/not-found.component";
+import InternalErrorComponent from "@/shared/components/internalError/internal-error.component";
+import LoadComponent from "@/shared/components/load/load.component";
 
 export default function Main() {
-    const router = useRouter();
-    const { isLoading, tasks, deleteById, updateTask } = useMain();
-    const authService = useMemo(() => new AuthService(), []);
+    const { isLoading, tasks, deleteById, updateTask, errorHttp, logout } = useMain();
 
     if (isLoading) {
-        return (
-            <div className="grid place-items-center min-h-screen">
-                <div className="flex flex-col items-center gap-4">
-                    <Loader2 className="h-14 w-14 text-blue-500 animate-spin" />
-                </div>
-            </div>
-        );
+        return <LoadComponent />;
     }
 
-    function logout() {
-        authService.logout();
-        toast.success("Bye Bye")
-        router.push("/")
+    if (errorHttp && errorHttp.code && errorHttp.code === 404) {
+        return <NotFoundComponent message={errorHttp.message} path={errorHttp.path} />;
+    }
+
+    if (errorHttp && errorHttp.code && errorHttp.code >= 500) {
+        return <InternalErrorComponent message={errorHttp.message} path={errorHttp.path} />;
     }
 
     return (
@@ -63,14 +56,14 @@ export default function Main() {
                         key={item.id}
                         task={item}
                         buttons={
-                        <>
-                            <BtnDelete
-                                onClick={() => { deleteById(item.id).then(r => r) } }
-                            />
-                            <BtnUpdate
-                                onClick={() => { updateTask(item.id) } }
-                            />
-                        </>
+                            <>
+                                <BtnDelete
+                                    onClick={() => { deleteById(item.id).then(r => r) } }
+                                />
+                                <BtnUpdate
+                                    onClick={() => { updateTask(item.id) } }
+                                />
+                            </>
                         }
                     ></ShowTask>
                 ))}
