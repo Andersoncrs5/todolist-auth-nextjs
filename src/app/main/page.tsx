@@ -14,10 +14,11 @@ import Footer from "@/shared/components/footer/footer.component";
 import MainLayout from "@/shared/components/main/main.component";
 import ShowTask from "@/shared/components/showTask/show-task.component";
 import {BtnDelete} from "@/shared/components/btnDelete/btn-delete.component";
+import {BtnUpdate} from "@/shared/components/btnUpdate/btn-update.component";
 
 export default function Main() {
     const router = useRouter();
-    const { isLoading, tasks, deleteById } = useMain();
+    const { isLoading, tasks, deleteById, updateTask } = useMain();
     const authService = useMemo(() => new AuthService(), []);
 
     if (isLoading) {
@@ -66,9 +67,8 @@ export default function Main() {
                             <BtnDelete
                                 onClick={() => { deleteById(item.id).then(r => r) } }
                             />
-                            <BtnFunc
-                                onClick={() => {} }
-                                icon={<ArrowUpToLine />}
+                            <BtnUpdate
+                                onClick={() => { updateTask(item.id) } }
                             />
                         </>
                         }
