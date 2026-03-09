@@ -1,6 +1,7 @@
 import {api} from "@/core/api/api-client";
 import {TaskQueryParams} from "@/core/dto/task/task-query.params";
 import {CreateTaskDto} from "@/core/dto/task/create-task.dto";
+import {UpdateTaskDto} from "@/core/dto/task/update-task.dto";
 
 export class TaskService {
     private readonly path: string = 'v1/Task'
@@ -19,4 +20,11 @@ export class TaskService {
         return await api.post(this.path, dto);
     }
 
+    async getById(id: number) {
+        return await api.get(this.path+"/"+id);
+    }
+
+    async update(id: number, dto: UpdateTaskDto) {
+        return await api.put(this.path + "/" + id, dto);
+    }
 }
