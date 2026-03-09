@@ -1,6 +1,6 @@
 import { CustomTextareaProps } from "@/shared/components/customTextarea/custom-textarea.props";
 
-export default function CustomTextarea({ className = "", label, ...rest  }: CustomTextareaProps) {
+export default function CustomTextarea({ className = "", text, label, ...rest  }: CustomTextareaProps) {
     return (
         <>
             <label
@@ -10,7 +10,9 @@ export default function CustomTextarea({ className = "", label, ...rest  }: Cust
             <textarea
                 className={className}
                 {...rest}
-            />
+            >
+                {text}
+            </textarea>
         </>
 
     );
