@@ -11,6 +11,7 @@ import { UnauthorizedError } from "@/core/exceptions/AppError";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { ResponseHTTP } from "@/core/res/response-http.res";
+import ErrorHandler from "@/core/interfaces/error-handler.interface";
 
 const subscribe = (callback: () => void) => {
     window.addEventListener("storage", callback);
@@ -24,6 +25,8 @@ export default function useMain() {
     const router = useRouter();
 
     const [tasks, setTasks] = useState<Page<Task>>();
+
+    const [errorHttp, setErrorHttp] = useState<ErrorHandler | null>(null);
 
     const [queries, setQueries] = useState<TaskQueryParams>({
         createAtBefore: undefined,
@@ -64,10 +67,22 @@ export default function useMain() {
                 if (status === 404) {
                     const content = e.response?.data as ResponseHTTP<void>;
                     toast.error(content.message);
+
+                    setErrorHttp({
+                        message: content.message,
+                        code: status,
+                    });
+
+                    return;
                 }
 
                 if (status && status >= 500) {
-                    toast.error("Internal server error. Try again later.");
+                    setErrorHttp({
+                        message: "Internal server error",
+                        code: status
+                    });
+
+                    return;
                 }
 
             }
@@ -145,12 +160,20 @@ export default function useMain() {
         router.push(`/task/${id}/update`);
     }
 
+    function logout() {
+        authService.logout();
+        toast.success("Bye Bye")
+        router.push("/")
+    }
+
     return {
         isLoading: !isLogged,
         tasks,
         queries,
         setQueries,
         deleteById,
-        updateTask
+        updateTask,
+        errorHttp,
+        logout
     };
 }
