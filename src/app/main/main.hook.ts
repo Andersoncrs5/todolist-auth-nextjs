@@ -141,11 +141,16 @@ export default function useMain() {
 
     }, [isLogged, router, getAllTasks]);
 
+    function updateTask(id: number) {
+        router.push(`/task/${id}/update`);
+    }
+
     return {
         isLoading: !isLogged,
         tasks,
         queries,
         setQueries,
-        deleteById
+        deleteById,
+        updateTask
     };
 }
