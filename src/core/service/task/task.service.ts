@@ -27,4 +27,8 @@ export class TaskService {
     async update(id: number, dto: UpdateTaskDto) {
         return await api.put(this.path + "/" + id, dto);
     }
+
+    async changeStatus(id: number) {
+        return await api.get(this.path+"/"+id+"/status/done")
+    }
 }
