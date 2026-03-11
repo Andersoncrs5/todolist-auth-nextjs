@@ -8,10 +8,10 @@ import { Page } from "@/core/res/page.res";
 import { Task } from "@/core/entities/Task";
 import { TaskQueryParams } from "@/core/dto/task/task-query.params";
 import { UnauthorizedError } from "@/core/exceptions/AppError";
-import { toast } from "sonner";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { ResponseHTTP } from "@/core/res/response-http.res";
 import ErrorHandler from "@/core/interfaces/error-handler.interface";
+import {toast} from "react-toastify";
 
 const subscribe = (callback: () => void) => {
     window.addEventListener("storage", callback);
@@ -37,6 +37,64 @@ export default function useMain() {
         title: undefined,
         priority: undefined,
     });
+
+    const isLogged = useSyncExternalStore(
+        subscribe,
+        () => authService.isLogged(),
+        () => false
+    );
+
+    const changeStatus = useCallback(async (id: number) => {
+        try {
+            const response = await taskService.changeStatus(id);
+
+            if (response.status === 200) {
+                setTasks(prev => {
+                    if (!prev) return prev;
+
+                    return {
+                        ...prev,
+                        items: prev.items.map(item =>
+                            item.id === id
+                                ? { ...item, done: !item.done }
+                                : item
+                        )
+                    };
+                })
+                toast.success("Status changed");
+            }
+
+        } catch (e: unknown) {
+            if (UnauthorizedError.isError(e)) {
+                toast.warning("You are unauthorized");
+                authService.logout();
+                router.push("/");
+                return;
+            }
+
+            if (axios.isAxiosError(e)) {
+                const status = e.response?.status;
+                const response = e.response?.data as ResponseHTTP<unknown>
+
+                if (status === 400) {
+                    toast.warning(response.message)
+                    return;
+                }
+
+                if (status === 404) {
+                    toast.warning(response.message)
+                    return;
+                }
+
+                if (status && status >= 500) {
+                    toast.error("An internal server error occurred.")
+                    return;
+                }
+
+            }
+
+        }
+    }, [authService, router, taskService])
 
     const getAllTasks = useCallback(async () => {
 
@@ -109,7 +167,8 @@ export default function useMain() {
                         ...prev,
                         items: prev.items.filter(x => x.id !== id)
                     };
-                });            }
+                });
+            }
 
         } catch (e: unknown) {
             if (e instanceof UnauthorizedError) {
@@ -138,11 +197,15 @@ export default function useMain() {
         }
     }
 
-    const isLogged = useSyncExternalStore(
-        subscribe,
-        () => authService.isLogged(),
-        () => false
-    );
+    function updateTask(id: number) {
+        router.push(`/task/${id}/update`);
+    }
+
+    function logout() {
+        authService.logout();
+        toast.success("Bye Bye")
+        router.push("/")
+    }
 
     useEffect(() => {
 
@@ -156,16 +219,6 @@ export default function useMain() {
 
     }, [isLogged, router, getAllTasks]);
 
-    function updateTask(id: number) {
-        router.push(`/task/${id}/update`);
-    }
-
-    function logout() {
-        authService.logout();
-        toast.success("Bye Bye")
-        router.push("/")
-    }
-
     return {
         isLoading: !isLogged,
         tasks,
@@ -174,6 +227,7 @@ export default function useMain() {
         deleteById,
         updateTask,
         errorHttp,
-        logout
+        logout,
+        changeStatus
     };
 }
