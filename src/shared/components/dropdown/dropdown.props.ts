@@ -5,7 +5,7 @@ interface DropdownItem {
 
 interface DropdownProps {
     label: string
-    items: DropdownItem[]
-    children: React.ReactNode
-    onSelect: (value: string | number) => void
+    items?: DropdownItem[]
+    children?: React.ReactNode
+    onSelect?: (value: string | number) => void
 }
