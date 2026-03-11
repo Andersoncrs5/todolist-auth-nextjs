@@ -25,7 +25,8 @@ export default function useMain() {
     const router = useRouter();
 
     const [tasks, setTasks] = useState<Page<Task>>();
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false);
+    const [loadTask, setLoadTask] = useState(false);
 
     const [errorHttp, setErrorHttp] = useState<ErrorHandler | null>(null);
 
@@ -98,7 +99,6 @@ export default function useMain() {
     }, [authService, router, taskService])
 
     const getAllTasks = useCallback(async () => {
-
         try {
 
             const response = await taskService.getAll(queries);
@@ -147,7 +147,6 @@ export default function useMain() {
             }
 
         }
-
     }, [queries, taskService, authService, router]);
 
     async function deleteById(id: number) {
@@ -213,16 +212,22 @@ export default function useMain() {
     }
 
     useEffect(() => {
-
         if (!isLogged) {
             router.replace('/');
             return;
         }
 
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        getAllTasks().then(r => r);
+        const delay = queries.title ? 600 : 0;
 
-    }, [isLogged, router, getAllTasks]);
+        const timeout = setTimeout(async () => {
+            setLoadTask(true);
+            await getAllTasks();
+            setLoadTask(false);
+        }, delay);
+
+        return () => clearTimeout(timeout);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isLogged, queries.title, queries.pageNumber, getAllTasks]);
 
     return {
         isLoading: !isLogged,
@@ -235,6 +240,8 @@ export default function useMain() {
         logout,
         changeStatus,
         open,
-        toggleOpen
+        toggleOpen,
+        loadTask,
+
     };
 }
