@@ -1,7 +1,7 @@
 'use client'
 
 import useMain from "@/app/main/main.hook";
-import {CircleUserRound, LogOut, Pencil} from "lucide-react";
+import {CircleUserRound, LogOut, Pencil, RefreshCcw} from "lucide-react";
 import Navbar from "@/shared/components/navbar/navbar.component";
 import {BtnRedirect} from "@/shared/components/btnRedirect/btn-redirect";
 import Logo from "@/shared/components/logo/logo.comonent";
@@ -16,7 +16,15 @@ import InternalErrorComponent from "@/shared/components/internalError/internal-e
 import LoadComponent from "@/shared/components/load/load.component";
 
 export default function Main() {
-    const { isLoading, tasks, deleteById, updateTask, errorHttp, logout } = useMain();
+    const {
+        isLoading,
+        tasks,
+        deleteById,
+        updateTask,
+        errorHttp,
+        logout,
+        changeStatus
+    } = useMain();
 
     if (isLoading) {
         return <LoadComponent />;
@@ -38,14 +46,18 @@ export default function Main() {
                     <BtnRedirect
                         to={"/user/profile"}
                         icon={<CircleUserRound />}
+                        className={"hover:bg-blue-600 transition-colors duration-250 p-2 "}
                     />
                     <BtnRedirect
                         to={"/task/create"}
                         icon={<Pencil />}
+                        className={"hover:bg-green-600 transition-colors duration-250 p-2 "}
+
                     />
                     <BtnFunc
                             onClick={() => { logout() }}
                             icon={<LogOut />}
+                            className={"hover:bg-red-400 transition-colors duration-250 p-2 "}
                     />
                 </div>
             </Navbar>
@@ -62,6 +74,16 @@ export default function Main() {
                                 />
                                 <BtnUpdate
                                     onClick={() => { updateTask(item.id) } }
+                                />
+                                <BtnFunc
+                                    onClick={() => changeStatus(item.id) }
+                                    icon={<RefreshCcw />}
+                                    className={`
+                                        text-gray-500
+                                        hover:bg-blue-500
+                                        hover:text-black
+                                        transition duration-200
+                                    `}
                                 />
                             </>
                         }
