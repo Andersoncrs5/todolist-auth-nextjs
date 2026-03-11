@@ -2,7 +2,7 @@ import { useRouter } from 'next/navigation';
 import {ButtonBase} from "@/shared/components/btn/btn.component";
 import {BtnRedirectProps} from "@/shared/components/btnRedirect/btn-redirect.interface";
 
-export const BtnRedirect = ({ icon, text, to, children, ...props }: BtnRedirectProps) => {
+export const BtnRedirect = ({ className, icon, text, to, children, ...props }: BtnRedirectProps) => {
     const router = useRouter();
 
     const handleNavigation = () => {
@@ -13,6 +13,7 @@ export const BtnRedirect = ({ icon, text, to, children, ...props }: BtnRedirectP
         <ButtonBase
             onClick={handleNavigation}
             {...props}
+            className={className}
         >
             {children}
             {text}
