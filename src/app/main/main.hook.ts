@@ -25,6 +25,7 @@ export default function useMain() {
     const router = useRouter();
 
     const [tasks, setTasks] = useState<Page<Task>>();
+    const [open, setOpen] = useState(false)
 
     const [errorHttp, setErrorHttp] = useState<ErrorHandler | null>(null);
 
@@ -207,6 +208,10 @@ export default function useMain() {
         router.push("/")
     }
 
+    function toggleOpen() {
+        setOpen(!open);
+    }
+
     useEffect(() => {
 
         if (!isLogged) {
@@ -228,6 +233,8 @@ export default function useMain() {
         updateTask,
         errorHttp,
         logout,
-        changeStatus
+        changeStatus,
+        open,
+        toggleOpen
     };
 }

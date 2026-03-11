@@ -14,6 +14,8 @@ import {BtnUpdate} from "@/shared/components/btnUpdate/btn-update.component";
 import NotFoundComponent from "@/shared/components/notFound/not-found.component";
 import InternalErrorComponent from "@/shared/components/internalError/internal-error.component";
 import LoadComponent from "@/shared/components/load/load.component";
+import BtnDrawer from "@/shared/components/drawer/btn/btn-drawer.component";
+import Drawer from "@/shared/components/drawer/ui/drawer.component";
 
 export default function Main() {
     const {
@@ -23,7 +25,9 @@ export default function Main() {
         updateTask,
         errorHttp,
         logout,
-        changeStatus
+        changeStatus,
+        open,
+        toggleOpen
     } = useMain();
 
     if (isLoading) {
@@ -40,9 +44,17 @@ export default function Main() {
 
     return (
         <div>
+            <Drawer
+                open={open}
+            ></Drawer>
+
             <Navbar>
                 <Logo />
                 <div className={"flex gap-3"} >
+                    <BtnDrawer
+                        open={open}
+                        onFunc={toggleOpen}
+                    />
                     <BtnRedirect
                         to={"/user/profile"}
                         icon={<CircleUserRound />}
@@ -52,12 +64,11 @@ export default function Main() {
                         to={"/task/create"}
                         icon={<Pencil />}
                         className={"hover:bg-green-600 transition-colors duration-250 p-2 "}
-
                     />
                     <BtnFunc
-                            onClick={() => { logout() }}
-                            icon={<LogOut />}
-                            className={"hover:bg-red-400 transition-colors duration-250 p-2 "}
+                        onClick={() => { logout() }}
+                        icon={<LogOut />}
+                        className={"hover:bg-red-400 transition-colors duration-250 p-2 "}
                     />
                 </div>
             </Navbar>
