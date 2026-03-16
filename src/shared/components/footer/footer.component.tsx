@@ -19,6 +19,9 @@ export default function Footer({ children, logo }: FooterProps) {
                     <a href="#" className="hover:text-white transition">
                         Contact
                     </a>
+                    <a href="#" className="hover:text-white transition">
+                        Credit
+                    </a>
                 </div>
 
             </div>
