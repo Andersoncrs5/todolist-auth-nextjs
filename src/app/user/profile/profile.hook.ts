@@ -36,13 +36,6 @@ export default function useProfile() {
                 }
 
             } catch (e: unknown) {
-                if (UnauthorizedError.isError(e)) {
-                    toast.warning("You are unauthorized");
-                    authService.logout();
-                    router.push("/");
-                    return;
-                }
-
                 if (axios.isAxiosError(e)) {
                     const response = e.response;
                     const data = e.response?.data;
