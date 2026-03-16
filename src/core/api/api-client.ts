@@ -23,16 +23,13 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response) {
-            const { status } = error.response;
-
-            if (status === 401) {
-                throw new UnauthorizedError();
+        if (error.response?.status === 401) {
+            if (typeof window !== 'undefined') {
+                localStorage.clear();
+                window.location.href = '/auth/login';
             }
-
-            return Promise.reject(error);
+            return Promise.reject(new UnauthorizedError());
         }
-
         return Promise.reject(error);
     }
 );
