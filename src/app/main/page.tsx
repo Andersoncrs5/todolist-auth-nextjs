@@ -21,7 +21,6 @@ import Pagination from "@/shared/components/pagination/pagination.component";
 
 export default function Main() {
     const {
-        isLoading,
         tasks,
         deleteById,
         updateTask,
@@ -34,10 +33,6 @@ export default function Main() {
         setQueries,
         loadTask
     } = useMain();
-
-    if (isLoading) {
-        return <LoadComponent />;
-    }
 
     if (errorHttp && errorHttp.code === 404) {
         return <NotFoundComponent message={errorHttp.message} path={errorHttp.path} />;
