@@ -230,7 +230,6 @@ export default function useMain() {
     }, [isLogged, queries.title, queries.pageNumber, getAllTasks]);
 
     return {
-        isLoading: !isLogged,
         tasks,
         queries,
         setQueries,
