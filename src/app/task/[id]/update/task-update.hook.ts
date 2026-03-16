@@ -29,7 +29,6 @@ export default function useUpdateTask() {
 
     const [task, setTask] = useState<Task | null>(null);
     const [errorHttp, setErrorHttp] = useState<ErrorHandler | null>(null);
-    const [loading, setLoading] = useState(true);
 
     const id = Number(params.id);
 
@@ -63,7 +62,6 @@ export default function useUpdateTask() {
         }
 
         const fetchTask = async () => {
-            setLoading(true);
 
             try {
                 const res = await taskService.getById(id);
@@ -74,14 +72,6 @@ export default function useUpdateTask() {
                 }
 
             } catch (e: unknown) {
-
-                if (e instanceof UnauthorizedError) {
-                    toast.warning("You are unauthorized");
-                    authService.logout();
-                    router.push("/");
-                    return;
-                }
-
                 if (axios.isAxiosError(e)) {
                     const status = e.response?.status;
                     const response = e.response?.data as ResponseHTTP<null>;
@@ -113,8 +103,6 @@ export default function useUpdateTask() {
                     path: "/main"
                 });
 
-            } finally {
-                setLoading(false);
             }
         };
 
@@ -205,7 +193,6 @@ export default function useUpdateTask() {
     return {
         task,
         errorHttp,
-        isLoading: loading,
         onSubmit,
         handleSubmit,
         errors,

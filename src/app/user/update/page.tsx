@@ -12,7 +12,6 @@ import {BtnSubmit} from "@/shared/components/btnSubmit/btn-submit.component";
 export default function UseUserUpdate() {
 
     const {
-        isLoadingUser,
         errorHttpResponse,
         handleSubmit,
         onSubmit,
@@ -21,10 +20,6 @@ export default function UseUserUpdate() {
         user,
         isSubmitting
     } = useUserUpdate()
-
-    if (isLoadingUser) {
-        return <LoadFormComponent />;
-    }
 
     if (errorHttpResponse) {
         return <ErrorState error={errorHttpResponse} />;

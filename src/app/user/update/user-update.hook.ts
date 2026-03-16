@@ -14,10 +14,9 @@ import {UnauthorizedError} from "@/core/exceptions/AppError";
 import axios, {AxiosError} from "axios";
 
 export default function useUserUpdate() {
-    const { user, error, isLoadingUser } = useGetUser();
+    const { user, error } = useGetUser();
 
     const userService: UserService = useMemo(() => new UserService(), []);
-    const authService: AuthService = useMemo(() => new AuthService(), []);
 
     const router: AppRouterInstance = useRouter();
 
@@ -106,7 +105,6 @@ export default function useUserUpdate() {
         errors,
         register,
         handleSubmit,
-        onSubmit,
-        isLoadingUser
+        onSubmit
     }
 }

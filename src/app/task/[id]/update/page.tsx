@@ -17,7 +17,6 @@ export default function UpdateTaskPage() {
     const {
         task,
         errorHttp,
-        isLoading,
         onSubmit,
         handleSubmit,
         errors,
@@ -25,10 +24,6 @@ export default function UpdateTaskPage() {
         isSubmitting,
         control
     } = useUpdateTask();
-
-    if (isLoading) {
-        return <LoadFormComponent />;
-    }
 
     if (errorHttp && errorHttp.code && errorHttp.code === 404) {
         return <NotFoundComponent message={errorHttp.message} path={errorHttp.path} />;
